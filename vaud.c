@@ -248,32 +248,27 @@ void display_rmeter()
 	
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
-	//mvprintw(10,10,"Space is %i",space);
-	//refresh();
 	if(space > 0)
 	{
 		for(i=1;i<width-1;i+=1)
 		{
 			float samp = fabs(data[space * i]); //get the waveform data
 			float dec;
-			//mvprintw(height/2,i,BAR);
 			int j;
-			for(j=0;j<samp*(height/2);j++)
+			for(j=height-2;j>((1-samp)*height);j--)
 			{
 				if(COLORFUL)
 					attron(COLOR_PAIR(2));
-				mvprintw((height/2)+j,i,BAR);
-				mvprintw((height/2)-j,i,BAR);
+				mvprintw(j,i,BAR);
 				if(COLORFUL)
 					attroff(COLOR_PAIR(2));
 					
 			}
-			for(j=samp*(height/2)+1;j<(height/2);j++)
+			for(j=((1-samp)*height-2);j>0;j--)
 			{
 				if(COLORFUL)
 					attron(COLOR_PAIR(3));
-				mvprintw((height/2)+j,i,BLANK);
-				mvprintw((height/2)-j,i,BLANK);
+				mvprintw(j,i,BLANK);
 				if(COLORFUL)
 					attroff(COLOR_PAIR(3));
 			}
