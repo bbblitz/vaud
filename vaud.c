@@ -202,19 +202,84 @@ void display_centerBars()
 	
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
-
-	for(i=0;i<space;i+=1)
+	//mvprintw(10,10,"Space is %i",space);
+	//refresh();
+	if(space > 0)
 	{
-		float samp = fabs(data[space * i]); //get the waveform data
-		float dec;
-		mvprintw(height/2,i,BAR);
-		int j;
-		for(j=0;j<samp*height;j++)
+		for(i=1;i<width-1;i+=1)
 		{
-			mvprintw((height/2)+j,i,BAR);
-			mvprintw((height/2)-j,i,BAR);
+			float samp = fabs(data[space * i]); //get the waveform data
+			float dec;
+			//mvprintw(height/2,i,BAR);
+			int j;
+			for(j=0;j<samp*(height/2);j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(2));
+				mvprintw((height/2)+j,i,BAR);
+				mvprintw((height/2)-j,i,BAR);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(2));
+					
+			}
+			for(j=samp*(height/2)+1;j<(height/2);j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(3));
+				mvprintw((height/2)+j,i,BLANK);
+				mvprintw((height/2)-j,i,BLANK);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(3));
+			}
 		}
 	}
+	refresh();
+}
+
+
+void display_rmeter()
+{
+	int width,height,startx,starty,i=0;
+	WINDOW *my_win;
+
+	/*Get width and height of console, make border*/
+	getmaxyx(stdscr,height,width);
+	my_win = create_newwin(height,width,startx,starty);
+	
+	/*Figure out how which nodes we can safely get*/
+	int space = ((unsigned int) dframes) / width;
+	//mvprintw(10,10,"Space is %i",space);
+	//refresh();
+	if(space > 0)
+	{
+		for(i=1;i<width-1;i+=1)
+		{
+			float samp = fabs(data[space * i]); //get the waveform data
+			float dec;
+			//mvprintw(height/2,i,BAR);
+			int j;
+			for(j=0;j<samp*(height/2);j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(2));
+				mvprintw((height/2)+j,i,BAR);
+				mvprintw((height/2)-j,i,BAR);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(2));
+					
+			}
+			for(j=samp*(height/2)+1;j<(height/2);j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(3));
+				mvprintw((height/2)+j,i,BLANK);
+				mvprintw((height/2)-j,i,BLANK);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(3));
+			}
+		}
+	}
+	refresh();
 }
 
 /* Displays the graph
@@ -357,6 +422,7 @@ int main(int argc, char *argv[])
 		} else {
 			switch(graph)
 			{	
+				case 0 : display_rmeter();break;
 				case 1 : display_meter();break;
 				case 2 : display_centerBars();break;
 			}
