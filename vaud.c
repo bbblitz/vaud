@@ -145,7 +145,7 @@ static int usage( const char * progname )
 	fprintf(stderr, "Visual Audio Version - %s\n\n", VERSION);
 	fprintf(stderr, "Usage %s [-f freqency] [-m meter] [-n] [<port>, ...]\n\n", progname);
 	fprintf(stderr, "where  -f      is how often to update the meter per second [8]\n");
- 	fprintf(stderr, "       -g      is the number of the meter (1-2)\n");
+ 	fprintf(stderr, "       -g      is the number of the meter (0-2)\n");
 	fprintf(stderr, "       -n      changes mode to output meter level as number in decibels\n");
 	fprintf(stderr, "       <port>  the port(s) to monitor (multiple ports are mixed)\n");
 	exit(1);
