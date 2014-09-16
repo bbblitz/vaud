@@ -281,52 +281,42 @@ void display_rmeter()
  */
 void display_meter()
 {
-	/*Some variables to keep track of stuff*/
-	int i;
-	int width,height;
-	int startx,starty = 0;
-	int space = 1;
+	int width,height,startx,starty,i=0;
 	WINDOW *my_win;
 
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
 	my_win = create_newwin(height,width,startx,starty);
-
-	/*Figure out how far inbetween the samples that are "safe" to get are*/
-	int samples = ((unsigned int) dframes) / width;
-
-	/*For every sample we can safely get*/
-	for(i=0;i<dframes;i+=samples)
+	
+	/*Figure out how which nodes we can safely get*/
+	int space = ((unsigned int) dframes) / width;
+	if(space > 0)
 	{
-		/*Get the value*/
-		float samp = fabs(data[i]);
-		float dec; //The percentage up the graph
-		if(COLORFUL)
-			attron(COLOR_PAIR(2));
-		/*Draw whitespace from the ground up*/
-		for(dec = height+2;dec > samp;dec-=(1.0/height))
+		for(i=1;i<width-1;i+=1)
 		{
-			if(dec*height<height-1 && dec*height>=1)
-			mvprintw(dec*height,space,BLANK);
-		}
-		if(COLORFUL)
-			attroff(COLOR_PAIR(2));
-			attron(COLOR_PAIR(3));
-		/*And draw bars the rest of the way*/
-		for(;dec>0;dec-=(1.0/height))
-		{
-			if(dec*height >= 1)
-			mvprintw(dec*height,space,BAR);
-		}
-		if(COLORFUL)
-			attroff(COLOR_PAIR(3));
-		/*Makes sure we don't draw over the frame*/
-		if(space < width-2)
-		{
-			space++;
+			float samp = fabs(data[space * i]); //get the waveform data
+			float dec;
+			int j;
+			for(j=1;j<((samp)*height);j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(2));
+				mvprintw(j,i,BAR);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(2));
+					
+			}
+			for(j=((samp)*height)+1;j<height-1;j++)
+			{
+				if(COLORFUL)
+					attron(COLOR_PAIR(3));
+				mvprintw(j,i,BLANK);
+				if(COLORFUL)
+					attroff(COLOR_PAIR(3));
+			}
 		}
 	}
-	refresh(); //And refresh the screen
+	refresh();
 }
 
 
