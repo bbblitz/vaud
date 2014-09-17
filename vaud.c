@@ -56,6 +56,7 @@ static float read_peak()
 
 	return tmp;
 }
+
 /* Callback called by JACK when audio is available.
    Stores value of peak sample */
 static int process_peak(jack_nframes_t nframes, void *arg)
@@ -199,39 +200,43 @@ void display_centerBars()
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
 	my_win = create_newwin(height,width,startx,starty);
-	
+	refresh();
 	/*Figure out how which nodes we can safely get*/
-	int space = ((unsigned int) dframes) / width;
-	//mvprintw(10,10,"Space is %i",space);
-	//refresh();
-	if(space > 0)
+	if(height % 2 == 1)
 	{
-		for(i=1;i<width-1;i+=1)
+		int space = ((unsigned int) dframes) / width;
+		if(space > 0)
 		{
-			float samp = fabs(data[space * i]); //get the waveform data
-			float dec;
-			//mvprintw(height/2,i,BAR);
-			int j;
-			for(j=0;j<samp*(height/2);j++)
+			for(i=1;i<width-1;i+=1)
 			{
-				if(COLORFUL)
-					attron(COLOR_PAIR(2));
-				mvprintw((height/2)+j,i,BAR);
-				mvprintw((height/2)-j,i,BAR);
-				if(COLORFUL)
-					attroff(COLOR_PAIR(2));
+				float samp = fabs(data[space * i]); //get the waveform data
+				float dec;
+				int j;
+				for(j=0;j<samp*(height/2);j++)
+				{
+					if(COLORFUL)
+						attron(COLOR_PAIR(2));
+					mvprintw((height/2)+j,i,BAR);
+					mvprintw((height/2)-j,i,BAR);
+					if(COLORFUL)
+						attroff(COLOR_PAIR(2));
 					
-			}
-			for(j=samp*(height/2)+1;j<(height/2);j++)
-			{
-				if(COLORFUL)
-					attron(COLOR_PAIR(3));
-				mvprintw((height/2)+j,i,BLANK);
-				mvprintw((height/2)-j,i,BLANK);
-				if(COLORFUL)
-					attroff(COLOR_PAIR(3));
+				}
+				for(j=samp*(height/2)+1;j<(height/2);j++)
+				{
+					if(COLORFUL)
+						attron(COLOR_PAIR(3));
+					mvprintw((height/2)+j,i,BLANK);
+					mvprintw((height/2)-j,i,BLANK);
+					if(COLORFUL)
+						attroff(COLOR_PAIR(3));
+				}
 			}
 		}
+	}
+	else
+	{
+		mvprintw(1,1,"Height needs to be a multiple of 2! Resize window!");
 	}
 	refresh();
 }
@@ -245,7 +250,7 @@ void display_rmeter()
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
 	my_win = create_newwin(height,width,startx,starty);
-	
+	refresh();
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
 	if(space > 0)
@@ -255,7 +260,7 @@ void display_rmeter()
 			float samp = fabs(data[space * i]); //get the waveform data
 			float dec;
 			int j;
-			for(j=height-2;j>((1-samp)*height);j--)
+			for(j=height-2;j>((1-samp)*height) && j>1;j--)
 			{
 				if(COLORFUL)
 					attron(COLOR_PAIR(2));
@@ -287,7 +292,7 @@ void display_meter()
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
 	my_win = create_newwin(height,width,startx,starty);
-	
+	refresh();
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
 	if(space > 0)
@@ -297,7 +302,7 @@ void display_meter()
 			float samp = fabs(data[space * i]); //get the waveform data
 			float dec;
 			int j;
-			for(j=1;j<((samp)*height);j++)
+			for(j=1;j<((samp)*(height)) && j<height-1;j++)
 			{
 				if(COLORFUL)
 					attron(COLOR_PAIR(2));
