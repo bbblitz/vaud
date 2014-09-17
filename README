@@ -1,0 +1,10 @@
+README
+
+vaud is a simple audio vizualizer written in ncureses for JACK,
+I wrote it because I could find no good alternative.
+
+To use, you MUST have the JACK server running,
+got under "connect" and connect vaud to whichever process you need.
+
+Additionally, color customization can be found the in config.h file.
+YOU NEED TO RECOMPILE FOR COLORS TO APPLY.

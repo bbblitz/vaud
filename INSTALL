@@ -1,0 +1,13 @@
+
+Installing vaud
+=====================
+vaud requires the following libraries to compile from source:
+
+ncurses
+jack
+
+You should also have a config.h file.
+
+To compile, use
+sudo make
+in the /vaud directory.
