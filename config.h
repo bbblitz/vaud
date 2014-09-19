@@ -1,6 +1,9 @@
 /*Settings for customization*/
 #define BLANK " " //Blank space in the graph
 #define BAR "|" //Character to use for the bar
+//Some characters that have been expirementally pretty good:
+// "|" " " "-" "#" "X" "0"
+
 #define COLORFUL false //Use custom colors?
 /*
  *Use Ncurses colors, valid colors are:
@@ -13,12 +16,12 @@
  *      COLOR_CYAN   
  *      COLOR_WHITE  
  */
-#define BORCOLORBG COLOR_BLACK //Border color background
-#define BORCOLORFG COLOR_RED //Border color forground
-#define BARCOLORBG COLOR_GREEN //Bar color background
-#define BARCOLORFG COLOR_YELLOW //Bar color forground
+#define BORCOLORBG COLOR_BLUE //Border color background
+#define BORCOLORFG COLOR_BLUE //Border color forground
+#define BARCOLORBG COLOR_BLUE //Bar color background
+#define BARCOLORFG COLOR_BLUE //Bar color forground
 #define BLANKCOLORBG COLOR_BLUE //Blank color background
-#define BLANKCOLORFG COLOR_MAGENTA //Blank color forground
+#define BLANKCOLORFG COLOR_BLACK //Blank color forground
 
 
 /********************************************************
@@ -71,18 +74,18 @@
 #define PACKAGE_NAME "visual-audio"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "vaud 0.5"
+#define PACKAGE_STRING "vaud 1.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "vaud"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.5"
+#define PACKAGE_VERSION "1.0"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.5"
+#define VERSION "1.0"
 
 
