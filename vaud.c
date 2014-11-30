@@ -48,15 +48,13 @@ int set = 0;
 jack_port_t *input_port = NULL;
 jack_client_t *client = NULL;
 
-WINDOW *create_newwin(int height, int width, int starty, int startx);
+void create_newwin(int height, int width, int starty, int startx, WINDOW* win);
 
 /* Read and reset the recent peak sample */
-static float read_peak()
+void read_peak(float tmp)
 {
-	float tmp = peak;
+	tmp = peak;
 	peak = 0.0f;
-
-	return tmp;
 }
 
 /* Callback called by JACK when audio is available.
@@ -149,7 +147,7 @@ static int usage( const char * progname )
 	fprintf(stderr, "Usage %s [-f freqency] [-m meter] [-n] [<port>, ...]\n\n", progname);
 	fprintf(stderr, "where  -f      is how often to update the meter per second [8]\n");
  	fprintf(stderr, "       -g      is the display style of the meter (0-2)\n");
-	fptintf(stderr, "		0 - top down\n		1 - bottom up\n		2 - centered, symetric (window must be a multiple of 2!)");"
+	fprintf(stderr, "		0 - top down\n		1 - bottom up\n		2 - centered, symetric (window must be a multiple of 2!)");
 	fprintf(stderr, "       -n      changes mode to output meter level as number in decibels\n");
 	fprintf(stderr, "       <port>  the port(s) to monitor (multiple ports are mixed)\n");
 	exit(1);
@@ -184,17 +182,15 @@ void start_ncurses()
  *int startx	: the column to start the window on
  *int starty	: the row to start the window on
  */
-WINDOW *create_newwin(int height, int width, int startx, int starty)
-{       WINDOW *local_win;
+void create_newwin(int height, int width, int startx, int starty, WINDOW* win)
+{       
 	if(COLORFUL)
 		attron(COLOR_PAIR(1));
-        local_win = newwin(height, width, starty, startx);
-        box(local_win, 0 , 0);
-        wrefresh(local_win);
+        win = newwin(height, width, starty, startx);
+        box(win, 0 , 0);
+        wrefresh(win);
 	if(COLORFUL)
 		attroff(COLOR_PAIR(1));
-
-        return local_win;
 }
 
 void display_centerBars()
@@ -204,7 +200,7 @@ void display_centerBars()
 
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
-	my_win = create_newwin(height,width,startx,starty);
+	//create_newwin(height,width,startx,starty,my_win);
 	refresh();
 	/*Figure out how which nodes we can safely get*/
 	if(height % 2 == 1)
@@ -242,6 +238,7 @@ void display_centerBars()
 	else
 	{
 		mvprintw(1,1,"Height needs to be a multiple of 2! Resize window!");
+	}
 }
 
 
@@ -252,7 +249,7 @@ void display_rmeter()
 
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
-	my_win = create_newwin(height,width,startx,starty);
+	create_newwin(height,width,startx,starty,my_win);
 	refresh();
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
@@ -294,7 +291,7 @@ void display_meter()
 
 	/*Get width and height of console, make border*/
 	getmaxyx(stdscr,height,width);
-	my_win = create_newwin(height,width,startx,starty);
+	create_newwin(height,width,startx,starty,my_win);
 	refresh();
 	/*Figure out how which nodes we can safely get*/
 	int space = ((unsigned int) dframes) / width;
@@ -407,8 +404,10 @@ int main(int argc, char *argv[])
 		start_ncurses();
 	}
 	float db;
+	float p;
 	while (running) {
-		db = 20.0f * log10f(read_peak() * bias);
+		read_peak(p);
+		db = 20.0f * log10f(p * bias);
 
 		if (decibels_mode==1) {
 			printf("%1.1f\n", db);
@@ -417,7 +416,7 @@ int main(int argc, char *argv[])
 			{	
 				case 0 :/* display_rmeter()*/;break;
 				case 1 :/* display_meter()*/;break;
-				case 2 :/* display_centerBars()*/;break;
+				case 2 :display_centerBars();break;
 			}
 		}
 
