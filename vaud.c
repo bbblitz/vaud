@@ -16,7 +16,9 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
+/*
 	A big thank you goes to Nicholas J. Humfrey, whos jack meter
 	was modified to make this. You can view the project here:
 	http://www.aelius.com/njh/jackmeter/
@@ -146,7 +148,8 @@ static int usage( const char * progname )
 	fprintf(stderr, "Visual Audio Version - %s\n\n", VERSION);
 	fprintf(stderr, "Usage %s [-f freqency] [-m meter] [-n] [<port>, ...]\n\n", progname);
 	fprintf(stderr, "where  -f      is how often to update the meter per second [8]\n");
- 	fprintf(stderr, "       -g      is the number of the meter (0-2)\n");
+ 	fprintf(stderr, "       -g      is the display style of the meter (0-2)\n");
+	fptintf(stderr, "		0 - top down\n		1 - bottom up\n		2 - centered, symetric (window must be a multiple of 2!)");"
 	fprintf(stderr, "       -n      changes mode to output meter level as number in decibels\n");
 	fprintf(stderr, "       <port>  the port(s) to monitor (multiple ports are mixed)\n");
 	exit(1);
@@ -166,10 +169,12 @@ void start_ncurses()
 	curs_set(0); //Hide cursor
 	if(COLORFUL)
 	{
+	
 		start_color(); //Tell ncurses to be colorufl!
-		init_pair(1, BORCOLORFG, BORCOLORBG); //Color the border
-		init_pair(2, BARCOLORFG, BARCOLORBG); //Color the bars
-		init_pair(3, BLANKCOLORBG, BLANKCOLORFG); //Color the blank space	
+		use_default_colors();
+		//init_pair(1, BORCOLORFG, BORCOLORBG); //Color the border
+		//init_pair(2, BARCOLORFG, BARCOLORBG); //Color the bars
+		//init_pair(3, BLANKCOLORBG, BLANKCOLORFG); //Color the blank space	
 	}
 }
 
@@ -215,21 +220,21 @@ void display_centerBars()
 				for(j=0;j<samp*(height/2);j++)
 				{
 					if(COLORFUL)
-						attron(COLOR_PAIR(2));
+						{attron(COLOR_PAIR(j));}
 					mvprintw((height/2)+j,i,BAR);
 					mvprintw((height/2)-j,i,BAR);
 					if(COLORFUL)
-						attroff(COLOR_PAIR(2));
+						{attroff(COLOR_PAIR(j));}
 					
 				}
 				for(j=samp*(height/2)+1;j<(height/2);j++)
 				{
 					if(COLORFUL)
-						attron(COLOR_PAIR(3));
+						attron(COLOR_PAIR(0));
 					mvprintw((height/2)+j,i,BLANK);
 					mvprintw((height/2)-j,i,BLANK);
 					if(COLORFUL)
-						attroff(COLOR_PAIR(3));
+						attroff(COLOR_PAIR(0));
 				}
 			}
 		}
@@ -237,8 +242,6 @@ void display_centerBars()
 	else
 	{
 		mvprintw(1,1,"Height needs to be a multiple of 2! Resize window!");
-	}
-	refresh();
 }
 
 
@@ -395,7 +398,6 @@ int main(int argc, char *argv[])
 	} else {
 		fprintf(stderr,"Meter is not connected to a port.\n");
 	}
-
 	// Calculate the decay length (should be 1600ms)
 	decay_len = (int)(1.6f / (1.0f/rate));
 
@@ -404,17 +406,18 @@ int main(int argc, char *argv[])
 	if (decibels_mode==0) {
 		start_ncurses();
 	}
+	float db;
 	while (running) {
-		float db = 20.0f * log10f(read_peak() * bias);
+		db = 20.0f * log10f(read_peak() * bias);
 
 		if (decibels_mode==1) {
 			printf("%1.1f\n", db);
 		} else {
 			switch(graph)
 			{	
-				case 0 : display_rmeter();break;
-				case 1 : display_meter();break;
-				case 2 : display_centerBars();break;
+				case 0 :/* display_rmeter()*/;break;
+				case 1 :/* display_meter()*/;break;
+				case 2 :/* display_centerBars()*/;break;
 			}
 		}
 
