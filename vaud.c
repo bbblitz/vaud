@@ -213,17 +213,17 @@ void display_centerBars()
 				float samp = fabs(data[space * i]); //get the waveform data
 				float dec;
 				int j;
-				for(j=0;j<samp*(height/2);j++)
+				for(j=0;j<samp*((height-2)/2);j++)
 				{
-					if(COLORFUL)
+					//if(COLORFUL)
 						{attron(COLOR_PAIR(j));}
 					mvprintw((height/2)+j,i,BAR);
 					mvprintw((height/2)-j,i,BAR);
-					if(COLORFUL)
+					//if(COLORFUL)
 						{attroff(COLOR_PAIR(j));}
 					
 				}
-				for(j=samp*(height/2)+1;j<(height/2);j++)
+				for(j=samp*(height/2);j<(height/2);j++)
 				{
 					if(COLORFUL)
 						attron(COLOR_PAIR(0));
