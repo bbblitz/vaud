@@ -9,5 +9,5 @@ jack
 You should also have a config.h file.
 
 To compile, use
-sudo make
+make
 in the /vaud directory.

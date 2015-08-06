@@ -1,7 +1,7 @@
 /*
 	vaud.c
 	A console based audio visualizer for JACK
-	Copyright (C) 2014 Alexander M. Pickering
+	Copyright (C) 2014-2015 Alexander M. Pickering
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
